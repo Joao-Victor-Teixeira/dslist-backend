@@ -1,9 +1,11 @@
 package com.joaodev.dslist.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.joaodev.dslist.entities.Game;
 import com.joaodev.dslist.projections.GameMinProjection;
 
-public class GameMinDTO {
+public class GameMinDTO extends RepresentationModel<GameMinDTO> {
 
 	private Long id;
 	private String title;

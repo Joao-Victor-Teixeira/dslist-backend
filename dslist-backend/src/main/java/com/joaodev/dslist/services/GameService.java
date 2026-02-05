@@ -2,33 +2,35 @@ package com.joaodev.dslist.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.joaodev.dslist.dto.GameDTO;
 import com.joaodev.dslist.dto.GameMinDTO;
 import com.joaodev.dslist.entities.Game;
 import com.joaodev.dslist.projections.GameMinProjection;
 import com.joaodev.dslist.repositories.GameRepository;
+import com.joaodev.dslist.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class GameService {
 
-	@Autowired
-	private GameRepository gameRepository;
-	
-	@Transactional(readOnly = true)
-	public GameDTO findById(@PathVariable Long listId) {
-		Game result = gameRepository.findById(listId).get();
-		return new GameDTO(result);
+	private final GameRepository gameRepository;
+
+	public GameService(GameRepository gameRepository) {
+		this.gameRepository = gameRepository;
 	}
 	
 	@Transactional(readOnly = true)
-	public List<GameMinDTO> findAll() {
-		List<Game> result = gameRepository.findAll();
-		return result.stream().map(GameMinDTO::new).toList();
+	public Game findById(Long listId) {
+		return gameRepository.findById(listId).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<Game> findAll(Pageable pageable) {
+		return gameRepository.findAll(pageable);
+		
 	}
 	
 	@Transactional(readOnly = true)
@@ -36,4 +38,6 @@ public class GameService {
 		List<GameMinProjection> games = gameRepository.searchByList(listId);
 		return games.stream().map(GameMinDTO::new).toList();
 	}
+
+	
 }
