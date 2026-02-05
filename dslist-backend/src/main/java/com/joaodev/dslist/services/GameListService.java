@@ -2,11 +2,11 @@ package com.joaodev.dslist.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joaodev.dslist.dto.GameListDTO;
 import com.joaodev.dslist.entities.GameList;
 import com.joaodev.dslist.projections.GameMinProjection;
 import com.joaodev.dslist.repositories.GameListRepository;
@@ -15,16 +15,18 @@ import com.joaodev.dslist.repositories.GameRepository;
 @Service
 public class GameListService {
 
-	@Autowired
-	private GameListRepository gameListRepository;
+	private final GameListRepository gameListRepository;
 	
-	@Autowired
-	private GameRepository gameRepository;
+	private final GameRepository gameRepository;
 	
+	public GameListService(GameListRepository gameListRepository, GameRepository gameRepository) {
+		this.gameListRepository = gameListRepository;
+		this.gameRepository = gameRepository;
+	}
+
 	@Transactional(readOnly = true)
-	public List<GameListDTO> findAll() {
-		List<GameList> result = gameListRepository.findAll();
-		return result.stream().map(GameListDTO::new).toList();
+	public Page<GameList> findAll(Pageable pageable) {
+		return gameListRepository.findAll(pageable);
 	}
 	
 	@Transactional
@@ -42,4 +44,6 @@ public class GameListService {
 			gameListRepository.updateBelongingPosition(listId, list.get(i).getId(), i);
 		}
 	}
+
+	
 }

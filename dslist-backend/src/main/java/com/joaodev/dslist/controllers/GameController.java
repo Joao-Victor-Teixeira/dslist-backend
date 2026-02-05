@@ -1,7 +1,5 @@
 package com.joaodev.dslist.controllers;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -52,7 +50,5 @@ public class GameController {
 		
 		return ResponseEntity.ok(pagedModel);
 	}
-
-	
 
 }

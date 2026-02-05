@@ -1,8 +1,10 @@
 package com.joaodev.dslist.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.joaodev.dslist.entities.GameList;
 
-public class GameListDTO {
+public class GameListDTO extends RepresentationModel<GameListDTO> {
 
 	private Long id;
 	private String name;
