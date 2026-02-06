@@ -17,8 +17,16 @@ import com.joaodev.dslist.dto.GameMinDTO;
 import com.joaodev.dslist.entities.Game;
 import com.joaodev.dslist.services.GameService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping(value = "/games", produces = "application/json")
+@Tag(name = "Games", description = "Controlador REST para exibir coleção de Games")
 public class GameController {
 
 	private final GameService gameService;
@@ -34,6 +42,10 @@ public class GameController {
 		this.minModelAssembler = minModelAssembler;
 	}
 
+	@Operation(summary = "Retorna um game por id", description = "Retorna um JSON com um único game correspondente ao id passado na requisição", responses = {
+			@ApiResponse(description = "Sucesso", responseCode = "200", content = @Content(schema = @Schema(implementation = GameDTO.class))),
+			@ApiResponse(description = "Not Found - game não encontrado", responseCode = "404", content = @Content)
+	})
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<GameDTO> findById(@PathVariable Long id) {
 		Game game = gameService.findById(id);
@@ -41,13 +53,17 @@ public class GameController {
 		return ResponseEntity.ok(dto);
 	}
 
+	@Operation(summary = "Retorna todos os games de forma paginada", description = "Retorna um JSON com todos os games ", responses = {
+			@ApiResponse(description = "Sucesso", responseCode = "200", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GameMinDTO.class)))),
+			@ApiResponse(description = "Erro interno no servidor", responseCode = "500", content = @Content)
+	})
 	@GetMapping
 	public ResponseEntity<PagedModel<GameMinDTO>> findAll(
 			Pageable pageable,
 			PagedResourcesAssembler<Game> pagedResourcesAssembler) {
 		Page<Game> page = gameService.findAll(pageable);
 		PagedModel<GameMinDTO> pagedModel = pagedResourcesAssembler.toModel(page, minModelAssembler);
-		
+
 		return ResponseEntity.ok(pagedModel);
 	}
 

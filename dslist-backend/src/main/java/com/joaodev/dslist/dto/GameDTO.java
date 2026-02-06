@@ -5,16 +5,36 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.joaodev.dslist.entities.Game;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "DTO responsável por exibir todos os dados dos Games ")
 public class GameDTO extends RepresentationModel<GameDTO> {
 
+	@Schema(description = "Atributo identificador único do game", example = "1L")
 	private Long id;
+	
+	@Schema(description = "Título do jogo", example = "Mass Effect Trilogy")
 	private String title;
+	
+	@Schema(description = "Ano de lançamento do jogo", example = "2012")
 	private Integer year;
+	
+	@Schema(description = "Gênero ou gêneros do jogo", example = "Role-playing (RPG), Shooter")
 	private String genre;
+	
+	@Schema(description = "Plataformas compatíveis", example = "XBox, Playstation, PC")
 	private String platforms;
+	
+	@Schema(description = "Atributo responsavel por ordenar a lista", example = "4.8")
 	private Double score;
+	
+	@Schema(description = "Imagem para representar o game", example = "https://raw.githubusercontent.com/devsuperior/java-spring-dslist/main/resources/1.png")
 	private String imgUrl;
+	
+	@Schema(description = "Descrição curta sobre o game", example = "Lorem ipsum dolor sit amet consectetur")
 	private String shortDescription;
+	
+	@Schema(description = "Descrição aprofundada sobre o game", example = "Lorem ipsum dolor sit amet consectetur")
 	private String longDescription;
 	
 	public GameDTO() {
